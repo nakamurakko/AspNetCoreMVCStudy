@@ -48,6 +48,33 @@ public class HomeController : Controller
         return View(model);
     }
 
+    public async Task<IActionResult> Search(HomeModel model)
+    {
+        // Where 以外は Index() メソッドと同じ。
+        model.Books = await _applicationDbContext.Books
+            .GroupJoin(
+                _applicationDbContext.Authors,
+                book => book.AuthorId,
+                author => author.AuthorId,
+                (book, author) => new { book, author }
+            )
+            .SelectMany(
+                bookAndAuthor => bookAndAuthor.author.DefaultIfEmpty(),
+                (bookAndAuthor, author) =>
+                new Book()
+                {
+                    BookId = bookAndAuthor.book.BookId,
+                    Title = bookAndAuthor.book.Title,
+                    AuthorId = bookAndAuthor.book.AuthorId,
+                    Author = author
+                }
+            )
+            .Where(book => book.Title.Contains(model.SearchTitle))
+            .ToListAsync();
+
+        return View(nameof(HomeController.Index), model);
+    }
+
     public IActionResult Privacy()
     {
         return View();

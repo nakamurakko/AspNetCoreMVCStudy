@@ -1,4 +1,6 @@
-﻿@{
+﻿@model HomeModel;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,6 +8,15 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+@using (Html.BeginForm(nameof(AspNetCoreMVCStudy.Controllers.HomeController.Search), "Home", FormMethod.Post))
+{
+    <div class="input-group">
+        @Html.LabelFor(model => model.SearchTitle, "タイトル検索", htmlAttributes: new { @class = "col-form-label" })
+        @Html.EditorFor(model => model.SearchTitle, new { htmlAttributes = new { @class = "form-control", @placeholder = "検索したいタイトル" } })
+        <input class="btn btn-primary" type="submit" value="検索" />
+    </div>
+}
 
 <table class="table table-striped">
     <thead>
