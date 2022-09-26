@@ -1,2 +1,3 @@
 # AspNetCoreMVCStudy
-Asp.NET Core MVC 勉強用
+
+ASP.NET Core MVC 勉強用プロジェクト。
