@@ -6,3 +6,21 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">タイトル</th>
+            <th scope="col">著者</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model.Books)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@(book.Author != null ? book.Author.AuthorName : "")</td>
+            </tr>
+        }
+    </tbody>
+</table>
