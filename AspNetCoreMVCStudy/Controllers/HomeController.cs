@@ -15,19 +15,19 @@ public class HomeController : Controller
 
     public HomeController(ILogger<HomeController> logger, ApplicationDbContext applicationDbContext)
     {
-        _logger = logger;
+        this._logger = logger;
 
         // https://learn.microsoft.com/ja-jp/aspnet/core/data/ef-mvc/intro?view=aspnetcore-6.0#create-controller-and-views
-        _applicationDbContext = applicationDbContext;
+        this._applicationDbContext = applicationDbContext;
     }
 
     public async Task<IActionResult> Index()
     {
         var model = new HomeModel();
 
-        model.Books = await _applicationDbContext.Books
+        model.Books = await this._applicationDbContext.Books
             .GroupJoin(
-                _applicationDbContext.Authors,
+                this._applicationDbContext.Authors,
                 book => book.AuthorId,
                 author => author.AuthorId,
                 (book, author) => new { book, author }
@@ -45,15 +45,15 @@ public class HomeController : Controller
             )
             .ToListAsync();
 
-        return View(model);
+        return this.View(model);
     }
 
     public async Task<IActionResult> Search(HomeModel model)
     {
         // Where 以外は Index() メソッドと同じ。
-        model.Books = await _applicationDbContext.Books
+        model.Books = await this._applicationDbContext.Books
             .GroupJoin(
-                _applicationDbContext.Authors,
+                this._applicationDbContext.Authors,
                 book => book.AuthorId,
                 author => author.AuthorId,
                 (book, author) => new { book, author }
@@ -72,12 +72,12 @@ public class HomeController : Controller
             .Where(book => book.Title.Contains(model.SearchTitle))
             .ToListAsync();
 
-        return View(nameof(HomeController.Index), model);
+        return this.View(nameof(HomeController.Index), model);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
     }
 }
