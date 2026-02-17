@@ -94,6 +94,12 @@ public class HomeController : Controller
         //    .Where(book => book.Title.Contains(model.SearchTitle))
         //    .ToListAsync();
 
+        LinqKit.ExpressionStarter<Book> predicateBuilder = LinqKit.PredicateBuilder.New<Book>(true);
+        if (!string.IsNullOrWhiteSpace(model.SearchTitle))
+        {
+            predicateBuilder.Or(x => x.Title.Contains(model.SearchTitle));
+        }
+
         model.Books = await dbContext.Books
             .LeftJoin(
                 dbContext.Authors,
@@ -108,7 +114,7 @@ public class HomeController : Controller
                     Author = author
                 }
             )
-            .Where(book => book.Title.Contains(model.SearchTitle))
+            .Where(predicateBuilder)
             .ToListAsync();
 
         return this.View(nameof(HomeController.Index), model);
