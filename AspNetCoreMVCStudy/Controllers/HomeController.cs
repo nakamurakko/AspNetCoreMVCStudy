@@ -28,21 +28,38 @@ public class HomeController : Controller
 
         HomeModel model = new();
 
+        //model.Books = await dbContext.Books
+        //    .GroupJoin(
+        //        dbContext.Authors,
+        //        book => book.AuthorId,
+        //        author => author.AuthorId,
+        //        (book, author) => new { book, author }
+        //    )
+        //    .SelectMany(
+        //        bookAndAuthor => bookAndAuthor.author.DefaultIfEmpty(),
+        //        (bookAndAuthor, author) =>
+        //        new Book()
+        //        {
+        //            BookId = bookAndAuthor.book.BookId,
+        //            Title = bookAndAuthor.book.Title,
+        //            AuthorId = bookAndAuthor.book.AuthorId,
+        //            Author = author
+        //        }
+        //    )
+        //    .ToListAsync();
+
+        // .NET 10 以降では LeftJoin を使う。(LinqKit に LeftJoin が存在するため注意する。)
         model.Books = await dbContext.Books
-            .GroupJoin(
+            .LeftJoin(
                 dbContext.Authors,
                 book => book.AuthorId,
                 author => author.AuthorId,
-                (book, author) => new { book, author }
-            )
-            .SelectMany(
-                bookAndAuthor => bookAndAuthor.author.DefaultIfEmpty(),
-                (bookAndAuthor, author) =>
+                (book, author) =>
                 new Book()
                 {
-                    BookId = bookAndAuthor.book.BookId,
-                    Title = bookAndAuthor.book.Title,
-                    AuthorId = bookAndAuthor.book.AuthorId,
+                    BookId = book.BookId,
+                    Title = book.Title,
+                    AuthorId = book.AuthorId,
                     Author = author
                 }
             )
@@ -56,21 +73,38 @@ public class HomeController : Controller
         using ApplicationDbContext dbContext = await this._applicationDbContextFactory.CreateDbContextAsync();
 
         // Where 以外は Index() メソッドと同じ。
+        //model.Books = await dbContext.Books
+        //    .GroupJoin(
+        //        dbContext.Authors,
+        //        book => book.AuthorId,
+        //        author => author.AuthorId,
+        //        (book, author) => new { book, author }
+        //    )
+        //    .SelectMany(
+        //        bookAndAuthor => bookAndAuthor.author.DefaultIfEmpty(),
+        //        (bookAndAuthor, author) =>
+        //        new Book()
+        //        {
+        //            BookId = bookAndAuthor.book.BookId,
+        //            Title = bookAndAuthor.book.Title,
+        //            AuthorId = bookAndAuthor.book.AuthorId,
+        //            Author = author
+        //        }
+        //    )
+        //    .Where(book => book.Title.Contains(model.SearchTitle))
+        //    .ToListAsync();
+
         model.Books = await dbContext.Books
-            .GroupJoin(
+            .LeftJoin(
                 dbContext.Authors,
                 book => book.AuthorId,
                 author => author.AuthorId,
-                (book, author) => new { book, author }
-            )
-            .SelectMany(
-                bookAndAuthor => bookAndAuthor.author.DefaultIfEmpty(),
-                (bookAndAuthor, author) =>
-                new Book()
+                (book, author) =>
+                new Book
                 {
-                    BookId = bookAndAuthor.book.BookId,
-                    Title = bookAndAuthor.book.Title,
-                    AuthorId = bookAndAuthor.book.AuthorId,
+                    BookId = book.BookId,
+                    Title = book.Title,
+                    AuthorId = book.AuthorId,
                     Author = author
                 }
             )
