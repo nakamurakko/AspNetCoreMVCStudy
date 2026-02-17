@@ -9,25 +9,28 @@ namespace AspNetCoreMVCStudy.Controllers;
 
 public class HomeController : Controller
 {
+
     private readonly ILogger<HomeController> _logger;
 
-    private readonly ApplicationDbContext _applicationDbContext;
+    private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext applicationDbContext)
+    public HomeController(ILogger<HomeController> logger, IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
     {
         this._logger = logger;
 
         // https://learn.microsoft.com/ja-jp/aspnet/core/data/ef-mvc/intro?view=aspnetcore-6.0#create-controller-and-views
-        this._applicationDbContext = applicationDbContext;
+        this._applicationDbContextFactory = applicationDbContextFactory;
     }
 
     public async Task<IActionResult> Index()
     {
-        var model = new HomeModel();
+        using ApplicationDbContext dbContext = await this._applicationDbContextFactory.CreateDbContextAsync();
 
-        model.Books = await this._applicationDbContext.Books
+        HomeModel model = new();
+
+        model.Books = await dbContext.Books
             .GroupJoin(
-                this._applicationDbContext.Authors,
+                dbContext.Authors,
                 book => book.AuthorId,
                 author => author.AuthorId,
                 (book, author) => new { book, author }
@@ -50,10 +53,12 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Search(HomeModel model)
     {
+        using ApplicationDbContext dbContext = await this._applicationDbContextFactory.CreateDbContextAsync();
+
         // Where 以外は Index() メソッドと同じ。
-        model.Books = await this._applicationDbContext.Books
+        model.Books = await dbContext.Books
             .GroupJoin(
-                this._applicationDbContext.Authors,
+                dbContext.Authors,
                 book => book.AuthorId,
                 author => author.AuthorId,
                 (book, author) => new { book, author }
@@ -80,4 +85,5 @@ public class HomeController : Controller
     {
         return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
     }
+
 }
