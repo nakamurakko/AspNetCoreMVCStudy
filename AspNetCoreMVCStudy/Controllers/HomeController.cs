@@ -24,7 +24,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        using ApplicationDbContext dbContext = await this._applicationDbContextFactory.CreateDbContextAsync();
+        await using ApplicationDbContext dbContext = await this._applicationDbContextFactory.CreateDbContextAsync();
 
         HomeModel model = new();
 
@@ -70,7 +70,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Search(HomeModel model)
     {
-        using ApplicationDbContext dbContext = await this._applicationDbContextFactory.CreateDbContextAsync();
+        await using ApplicationDbContext dbContext = await this._applicationDbContextFactory.CreateDbContextAsync();
 
         // Where 以外は Index() メソッドと同じ。
         //model.Books = await dbContext.Books
