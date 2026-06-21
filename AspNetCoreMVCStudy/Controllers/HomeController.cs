@@ -49,20 +49,24 @@ public class HomeController : Controller
         //    .ToListAsync();
 
         // .NET 10 以降では LeftJoin を使う。(LinqKit に LeftJoin が存在するため注意する。)
+        //model.Books = await dbContext.Books
+        //    .LeftJoin(
+        //        dbContext.Authors,
+        //        book => book.AuthorId,
+        //        author => author.AuthorId,
+        //        (book, author) =>
+        //        new Book()
+        //        {
+        //            BookId = book.BookId,
+        //            Title = book.Title,
+        //            AuthorId = book.AuthorId,
+        //            Author = author
+        //        }
+        //    )
+        //    .ToListAsync();
+
         model.Books = await dbContext.Books
-            .LeftJoin(
-                dbContext.Authors,
-                book => book.AuthorId,
-                author => author.AuthorId,
-                (book, author) =>
-                new Book()
-                {
-                    BookId = book.BookId,
-                    Title = book.Title,
-                    AuthorId = book.AuthorId,
-                    Author = author
-                }
-            )
+            .Include(book => book.Author)
             .ToListAsync();
 
         return this.View(model);
@@ -94,6 +98,29 @@ public class HomeController : Controller
         //    .Where(book => book.Title.Contains(model.SearchTitle))
         //    .ToListAsync();
 
+        //LinqKit.ExpressionStarter<Book> predicateBuilder = LinqKit.PredicateBuilder.New<Book>(true);
+        //if (!string.IsNullOrWhiteSpace(model.SearchTitle))
+        //{
+        //    predicateBuilder.Or(x => x.Title.Contains(model.SearchTitle));
+        //}
+
+        //model.Books = await dbContext.Books
+        //    .LeftJoin(
+        //        dbContext.Authors,
+        //        book => book.AuthorId,
+        //        author => author.AuthorId,
+        //        (book, author) =>
+        //        new Book
+        //        {
+        //            BookId = book.BookId,
+        //            Title = book.Title,
+        //            AuthorId = book.AuthorId,
+        //            Author = author
+        //        }
+        //    )
+        //    .Where(predicateBuilder)
+        //    .ToListAsync();
+
         LinqKit.ExpressionStarter<Book> predicateBuilder = LinqKit.PredicateBuilder.New<Book>(true);
         if (!string.IsNullOrWhiteSpace(model.SearchTitle))
         {
@@ -101,19 +128,7 @@ public class HomeController : Controller
         }
 
         model.Books = await dbContext.Books
-            .LeftJoin(
-                dbContext.Authors,
-                book => book.AuthorId,
-                author => author.AuthorId,
-                (book, author) =>
-                new Book
-                {
-                    BookId = book.BookId,
-                    Title = book.Title,
-                    AuthorId = book.AuthorId,
-                    Author = author
-                }
-            )
+            .Include(book => book.Author)
             .Where(predicateBuilder)
             .ToListAsync();
 

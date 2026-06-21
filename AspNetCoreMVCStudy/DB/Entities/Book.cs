@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AspNetCoreMVCStudy.DB.Entities;
 
-[Table(nameof(Book))]
-public class Book
+public sealed class Book
 {
 
     public long BookId { get; set; }
@@ -15,7 +13,6 @@ public class Book
 
     public long? AuthorId { get; set; }
 
-    [ForeignKey(nameof(AuthorId)), NotMapped]
     public Author? Author { get; set; }
 
 }
