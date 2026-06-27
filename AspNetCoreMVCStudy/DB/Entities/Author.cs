@@ -10,9 +10,11 @@ namespace AspNetCoreMVCStudy.DB.Entities;
 public sealed class Author
 {
 
+    /// <summary>著者 ID</summary>
     [Comment("著者 ID")]
     public long AuthorId { get; set; }
 
+    /// <summary>著者名</summary>
     [Required]
     [MaxLength(100)]
     [Comment("著者名")]
