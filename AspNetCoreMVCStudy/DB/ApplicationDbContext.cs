@@ -16,6 +16,15 @@ public class ApplicationDbContext : DbContext
         this.ChangeTracker.Tracked += this.TimestampsChanged;
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Author>()
+            .HasMany(author => author.Books)
+            .WithOne(book => book.Author)
+            .HasPrincipalKey(author => author.AuthorId)
+            .HasForeignKey(book => book.AuthorId);
+    }
+
     /// <summary>
     /// 日時更新のイベント。
     /// </summary>
