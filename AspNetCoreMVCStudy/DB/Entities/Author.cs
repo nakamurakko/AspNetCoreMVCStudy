@@ -7,7 +7,7 @@ namespace AspNetCoreMVCStudy.DB.Entities;
 /// 著者クラス。
 /// </summary>
 [Comment("著者")]
-public sealed class Author
+public sealed class Author : IHasDbTimestamps
 {
 
     /// <summary>著者 ID</summary>
@@ -19,6 +19,12 @@ public sealed class Author
     [MaxLength(100)]
     [Comment("著者名")]
     public string AuthorName { get; set; } = "";
+
+    [Comment("作成日時")]
+    public DateTime? CreatedAt { get; set; }
+
+    [Comment("更新日時")]
+    public DateTime? UpdatedAt { get; set; }
 
     public ICollection<Book> Books { get; set; } = new List<Book>();
 

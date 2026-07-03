@@ -12,6 +12,13 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+#region DB のマイグレーション
+
+IDbContextFactory<ApplicationDbContext> dbContextFactory = app.Services.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
+await using ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+await dbContext.Database.MigrateAsync();
+
+#endregion
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
