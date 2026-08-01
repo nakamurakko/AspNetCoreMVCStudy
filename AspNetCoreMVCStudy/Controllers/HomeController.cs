@@ -67,6 +67,7 @@ public class HomeController : Controller
 
         model.Books = await dbContext.Books
             .Include(book => book.Author)
+            .AsNoTracking()
             .ToListAsync();
 
         return this.View(model);
@@ -130,6 +131,7 @@ public class HomeController : Controller
         model.Books = await dbContext.Books
             .Include(book => book.Author)
             .Where(predicateBuilder)
+            .AsNoTracking()
             .ToListAsync();
 
         return this.View(nameof(HomeController.Index), model);
