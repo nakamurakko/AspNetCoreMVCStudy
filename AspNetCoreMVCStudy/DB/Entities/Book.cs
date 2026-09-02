@@ -11,6 +11,7 @@ public sealed class Book : IHasDbTimestamps
 {
 
     /// <summary>書籍 ID</summary>
+    [Key]
     [Comment("書籍 ID")]
     public long BookId { get; set; }
 
