@@ -1,4 +1,4 @@
-﻿namespace AspNetCoreMVCStudy.DB;
+﻿namespace AspNetCoreMVCStudy.DB.Entities.Interfaces;
 
 /// <summary>
 /// DB 更新日時用インターフェイス。

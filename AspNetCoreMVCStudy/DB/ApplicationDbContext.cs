@@ -1,4 +1,5 @@
 ﻿using AspNetCoreMVCStudy.DB.Entities;
+using AspNetCoreMVCStudy.DB.Entities.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
